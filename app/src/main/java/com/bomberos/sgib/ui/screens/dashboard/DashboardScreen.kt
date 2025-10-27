@@ -11,10 +11,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.bomberos.sgib.R
 import com.bomberos.sgib.domain.model.Stats
 import com.bomberos.sgib.util.Resource
@@ -34,12 +37,20 @@ fun DashboardScreen(
     val currentUser by viewModel.currentUser.collectAsState()
     val statsState by viewModel.statsState.collectAsState()
     val scrollState = rememberScrollState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Recargar estadísticas cada vez que la pantalla vuelve a estar activa
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.loadStats()
+        }
+    }
 
     // Configurar color de status bar
     val systemUiController = rememberSystemUiController()
     val primaryColor = MaterialTheme.colorScheme.primary
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(primaryColor) {
         systemUiController.setStatusBarColor(
             color = primaryColor,
             darkIcons = false

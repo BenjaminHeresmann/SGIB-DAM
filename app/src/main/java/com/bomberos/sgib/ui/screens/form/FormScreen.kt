@@ -1,5 +1,6 @@
 package com.bomberos.sgib.ui.screens.form
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,10 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import androidx.core.content.FileProvider
+import java.io.File
 
 /**
  * Pantalla de formulario para crear/editar bombero
@@ -35,6 +39,32 @@ fun FormScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var showFotoOptions by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    var tempCameraUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+
+    // Mostrar mensaje cuando hay error
+    LaunchedEffect(state.error) {
+        state.error?.let { error ->
+            snackbarHostState.showSnackbar(
+                message = error,
+                duration = SnackbarDuration.Short
+            )
+            viewModel.clearError()
+        }
+    }
+
+    // Mostrar mensaje de éxito y navegar de vuelta
+    LaunchedEffect(state.guardadoExitoso) {
+        if (state.guardadoExitoso) {
+            snackbarHostState.showSnackbar(
+                message = if (state.isEditMode) "Bombero actualizado correctamente" else "Bombero creado correctamente",
+                duration = SnackbarDuration.Short
+            )
+            kotlinx.coroutines.delay(500)
+            onNavigateBack()
+        }
+    }
 
     // Launcher para seleccionar imagen de galería
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -48,8 +78,9 @@ fun FormScreen(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
         if (success) {
-            // La foto se guardó exitosamente
-            // El URI ya fue configurado antes de lanzar la cámara
+            tempCameraUri?.let { uri ->
+                viewModel.updateFoto(uri.toString())
+            }
         }
     }
 
@@ -67,7 +98,8 @@ fun FormScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -184,7 +216,7 @@ fun FormScreen(
 
             // Botón de guardar
             Button(
-                onClick = { viewModel.guardar(onNavigateBack) },
+                onClick = { viewModel.guardar {} },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -241,7 +273,11 @@ fun FormScreen(
                     },
                     modifier = Modifier.clickable {
                         showFotoOptions = false
-                        // TODO: Lanzar cámara
+                        // Crear URI temporal para la foto
+                        tempCameraUri = createImageUri(context)
+                        tempCameraUri?.let { uri ->
+                            cameraLauncher.launch(uri)
+                        }
                     }
                 )
 
@@ -497,3 +533,19 @@ fun EstadoDropdown(
     }
 }
 
+/**
+ * Crear URI temporal para foto de cámara
+ */
+private fun createImageUri(context: Context): Uri? {
+    return try {
+        val imageFile = File(context.cacheDir, "bombero_foto_${System.currentTimeMillis()}.jpg")
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            imageFile
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}

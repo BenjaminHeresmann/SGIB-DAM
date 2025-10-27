@@ -30,8 +30,8 @@ object FakeDataSource {
         activo = true
     )
 
-    // Lista de bomberos precargados
-    private val bomberosList = listOf(
+    // Lista de bomberos precargados (mutable para permitir CRUD)
+    private val bomberosList = mutableListOf(
         Bombero(
             id = 1,
             nombres = "Juan Carlos",
@@ -195,12 +195,27 @@ object FakeDataSource {
             .map { (rango, list) -> RangoCount(rango, list.size) }
             .sortedByDescending { it.cantidad }
 
+        // Calcular bomberos nuevos del último mes (aproximado)
+        val fechaHaceUnMes = java.time.LocalDateTime.now().minusMonths(1)
+        val nuevosUltimoMes = try {
+            bomberosList.count { bombero ->
+                try {
+                    val createdAt = java.time.LocalDateTime.parse(bombero.createdAt)
+                    createdAt.isAfter(fechaHaceUnMes)
+                } catch (e: Exception) {
+                    false
+                }
+            }
+        } catch (e: Exception) {
+            0
+        }
+
         return Stats(
             totalActivos = activos,
             totalInactivos = inactivos + licencia,
             total = bomberosList.size,
             porRango = porRango,
-            nuevosUltimoMes = 2
+            nuevosUltimoMes = nuevosUltimoMes
         )
     }
 
@@ -240,5 +255,52 @@ object FakeDataSource {
             else -> null
         }
     }
-}
 
+    // ==================== MÉTODOS CRUD ====================
+
+    /**
+     * Crear un nuevo bombero
+     */
+    fun createBombero(bombero: Bombero): Bombero {
+        // Generar nuevo ID
+        val newId = (bomberosList.maxOfOrNull { it.id } ?: 0) + 1
+
+        // Crear bombero con ID generado y timestamps
+        val now = java.time.LocalDateTime.now().toString()
+        val newBombero = bombero.copy(
+            id = newId,
+            createdAt = now,
+            updatedAt = now
+        )
+
+        // Agregar a la lista
+        bomberosList.add(newBombero)
+
+        return newBombero
+    }
+
+    /**
+     * Actualizar un bombero existente
+     */
+    fun updateBombero(bombero: Bombero): Bombero? {
+        val index = bomberosList.indexOfFirst { it.id == bombero.id }
+
+        if (index != -1) {
+            // Actualizar timestamp
+            val now = java.time.LocalDateTime.now().toString()
+            val updatedBombero = bombero.copy(updatedAt = now)
+
+            bomberosList[index] = updatedBombero
+            return updatedBombero
+        }
+
+        return null
+    }
+
+    /**
+     * Eliminar un bombero
+     */
+    fun deleteBombero(id: Int): Boolean {
+        return bomberosList.removeIf { it.id == id }
+    }
+}

@@ -81,5 +81,63 @@ class BomberoRepositoryLocal @Inject constructor() {
             emit(Resource.Error("Error inesperado: ${e.localizedMessage}"))
         }
     }
-}
 
+    /**
+     * Crear un nuevo bombero
+     */
+    fun createBombero(bombero: Bombero): Flow<Resource<Bombero>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            // Simular delay de red
+            delay(500)
+
+            val newBombero = FakeDataSource.createBombero(bombero)
+            emit(Resource.Success(newBombero))
+        } catch (e: Exception) {
+            emit(Resource.Error("Error al crear bombero: ${e.localizedMessage}"))
+        }
+    }
+
+    /**
+     * Actualizar un bombero existente
+     */
+    fun updateBombero(bombero: Bombero): Flow<Resource<Bombero>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            // Simular delay de red
+            delay(500)
+
+            val updatedBombero = FakeDataSource.updateBombero(bombero)
+            if (updatedBombero != null) {
+                emit(Resource.Success(updatedBombero))
+            } else {
+                emit(Resource.Error("Bombero no encontrado"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error al actualizar bombero: ${e.localizedMessage}"))
+        }
+    }
+
+    /**
+     * Eliminar un bombero
+     */
+    fun deleteBombero(id: Int): Flow<Resource<Boolean>> = flow {
+        try {
+            emit(Resource.Loading())
+
+            // Simular delay de red
+            delay(500)
+
+            val deleted = FakeDataSource.deleteBombero(id)
+            if (deleted) {
+                emit(Resource.Success(true))
+            } else {
+                emit(Resource.Error("Bombero no encontrado"))
+            }
+        } catch (e: Exception) {
+            emit(Resource.Error("Error al eliminar bombero: ${e.localizedMessage}"))
+        }
+    }
+}

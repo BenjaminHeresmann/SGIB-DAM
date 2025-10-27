@@ -39,6 +39,11 @@ fun BomberosScreen(
     val state by viewModel.state.collectAsState()
     var showFiltros by remember { mutableStateOf(false) }
 
+    // Recargar datos cada vez que volvemos a esta pantalla
+    LaunchedEffect(Unit) {
+        viewModel.loadBomberos()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(

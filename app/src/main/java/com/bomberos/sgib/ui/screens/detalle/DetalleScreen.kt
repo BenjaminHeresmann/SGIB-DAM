@@ -84,17 +84,27 @@ fun DetalleScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
+            icon = {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
             title = { Text("Eliminar Bombero") },
-            text = { Text("¿Estás seguro de que deseas eliminar este bombero? Esta acción no se puede deshacer.") },
+            text = {
+                Text(
+                    "¿Estás seguro de que deseas eliminar a ${state.bombero?.nombreCompleto ?: "este bombero"}? Esta acción no se puede deshacer."
+                )
+            },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
-                        // TODO: Implementar eliminación
                         showDeleteDialog = false
-                        onNavigateBack()
+                        viewModel.deleteBombero(onNavigateBack)
                     },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
                     )
                 ) {
                     Text("Eliminar")

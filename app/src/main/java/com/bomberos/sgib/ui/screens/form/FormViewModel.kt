@@ -25,7 +25,7 @@ class FormViewModel @Inject constructor(
     val state: StateFlow<FormState> = _state.asStateFlow()
 
     private val bomberoId: Int? = try {
-        savedStateHandle.get<String>("bomberoId")?.toIntOrNull()?.takeIf { it > 0 }
+        savedStateHandle.get<Int>("bomberoId")?.takeIf { it > 0 }
     } catch (_: Exception) {
         null
     }
@@ -42,8 +42,40 @@ class FormViewModel @Inject constructor(
      */
     private fun loadBombero(id: Int) {
         viewModelScope.launch {
-            // TODO: Cargar bombero desde el repositorio
-            _state.update { it.copy(isEditMode = true) }
+            repository.getBomberoById(id).collect { result ->
+                when (result) {
+                    is com.bomberos.sgib.util.Resource.Loading -> {
+                        _state.update { it.copy(isLoading = true) }
+                    }
+                    is com.bomberos.sgib.util.Resource.Success -> {
+                        result.data?.let { bombero ->
+                            _state.update {
+                                it.copy(
+                                    isEditMode = true,
+                                    nombres = bombero.nombres,
+                                    apellidos = bombero.apellidos,
+                                    rango = bombero.rango,
+                                    especialidad = bombero.especialidad ?: "",
+                                    estado = bombero.estado,
+                                    telefono = bombero.telefono ?: "",
+                                    email = bombero.email ?: "",
+                                    direccion = bombero.direccion ?: "",
+                                    fotoUri = bombero.fotoUrl,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                    }
+                    is com.bomberos.sgib.util.Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                error = result.message ?: "Error al cargar bombero"
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -112,12 +144,50 @@ class FormViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, error = null) }
 
             try {
-                // TODO: Implementar guardado en repositorio
-                // Simulación de guardado exitoso
-                kotlinx.coroutines.delay(1000)
+                // Crear objeto Bombero con los datos del formulario
+                val bombero = com.bomberos.sgib.domain.model.Bombero(
+                    id = bomberoId ?: 0,
+                    nombres = _state.value.nombres.trim(),
+                    apellidos = _state.value.apellidos.trim(),
+                    rango = _state.value.rango,
+                    especialidad = _state.value.especialidad.trim().ifBlank { null },
+                    estado = _state.value.estado,
+                    telefono = _state.value.telefono.trim().ifBlank { null },
+                    email = _state.value.email.trim().ifBlank { null },
+                    direccion = _state.value.direccion.trim().ifBlank { null },
+                    fechaIngreso = java.time.LocalDate.now().toString(),
+                    fotoUrl = _state.value.fotoUri,
+                    createdAt = "",
+                    updatedAt = ""
+                )
 
-                _state.update { it.copy(isLoading = false, guardadoExitoso = true) }
-                onSuccess()
+                // Decidir si crear o actualizar
+                val flow = if (bomberoId != null && bomberoId!! > 0) {
+                    repository.updateBombero(bombero)
+                } else {
+                    repository.createBombero(bombero)
+                }
+
+                // Procesar resultado
+                flow.collect { result ->
+                    when (result) {
+                        is com.bomberos.sgib.util.Resource.Loading -> {
+                            // Mantener isLoading = true
+                        }
+                        is com.bomberos.sgib.util.Resource.Success -> {
+                            _state.update { it.copy(isLoading = false, guardadoExitoso = true) }
+                            onSuccess()
+                        }
+                        is com.bomberos.sgib.util.Resource.Error -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    error = result.message ?: "Error al guardar"
+                                )
+                            }
+                        }
+                    }
+                }
             } catch (e: Exception) {
                 _state.update {
                     it.copy(

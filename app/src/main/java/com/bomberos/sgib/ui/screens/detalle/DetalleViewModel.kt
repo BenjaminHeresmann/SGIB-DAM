@@ -29,8 +29,8 @@ class DetalleViewModel @Inject constructor(
 
     init {
         // Obtener ID del bombero desde los argumentos de navegación
-        val bomberoId = savedStateHandle.get<String>("bomberoId")?.toIntOrNull()
-        if (bomberoId != null) {
+        val bomberoId = savedStateHandle.get<Int>("bomberoId")
+        if (bomberoId != null && bomberoId > 0) {
             loadBombero(bomberoId)
         } else {
             _state.update { it.copy(error = "ID de bombero inválido") }
@@ -72,6 +72,33 @@ class DetalleViewModel @Inject constructor(
      */
     fun reload() {
         _state.value.bombero?.let { loadBombero(it.id) }
+    }
+
+    /**
+     * Eliminar bombero
+     */
+    fun deleteBombero(onSuccess: () -> Unit) {
+        val bomberoId = _state.value.bombero?.id ?: return
+
+        repository.deleteBombero(bomberoId).onEach { result ->
+            when (result) {
+                is Resource.Loading -> {
+                    _state.update { it.copy(isLoading = true, error = null) }
+                }
+                is Resource.Success -> {
+                    _state.update { it.copy(isLoading = false) }
+                    onSuccess()
+                }
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            error = result.message ?: "Error al eliminar"
+                        )
+                    }
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 }
 
