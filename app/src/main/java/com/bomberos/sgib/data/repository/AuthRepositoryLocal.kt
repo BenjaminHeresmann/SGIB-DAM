@@ -80,5 +80,28 @@ class AuthRepositoryLocal @Inject constructor(
     fun isBiometricEnabled(): Flow<Boolean> {
         return preferencesManager.isBiometricEnabled()
     }
+
+    /**
+     * Habilitar login biométrico guardando credenciales
+     */
+    suspend fun enableBiometric(email: String, password: String) {
+        preferencesManager.saveBiometricCredentials(email, password)
+        preferencesManager.setBiometricEnabled(true)
+    }
+
+    /**
+     * Obtener credenciales guardadas para biometría
+     */
+    fun getSavedCredentials(): Flow<Pair<String, String>?> {
+        return preferencesManager.getBiometricCredentials()
+    }
+
+    /**
+     * Deshabilitar login biométrico
+     */
+    suspend fun disableBiometric() {
+        preferencesManager.clearBiometricCredentials()
+        preferencesManager.setBiometricEnabled(false)
+    }
 }
 

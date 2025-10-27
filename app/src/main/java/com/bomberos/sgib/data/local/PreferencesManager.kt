@@ -29,6 +29,8 @@ class PreferencesManager(private val context: Context) {
         val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         val USER_ID = intPreferencesKey("user_id")
         val USER_EMAIL = stringPreferencesKey("user_email")
+        val BIOMETRIC_EMAIL = stringPreferencesKey("biometric_email")
+        val BIOMETRIC_PASSWORD = stringPreferencesKey("biometric_password")
     }
 
     // ==================== TOKEN ====================
@@ -91,6 +93,63 @@ class PreferencesManager(private val context: Context) {
     fun isBiometricEnabled(): Flow<Boolean> {
         return context.dataStore.data.map { preferences ->
             preferences[BIOMETRIC_ENABLED] ?: false
+        }
+    }
+
+    /**
+     * Guardar credenciales para login biométrico
+     * NOTA: En producción, usar EncryptedSharedPreferences o Android Keystore
+     */
+    suspend fun saveBiometricCredentials(email: String, password: String) {
+        context.dataStore.edit { preferences ->
+            // En este ejemplo educativo usamos base64 simple
+            // En producción DEBE usarse encriptación real
+            val encodedEmail = android.util.Base64.encodeToString(
+                email.toByteArray(),
+                android.util.Base64.DEFAULT
+            )
+            val encodedPassword = android.util.Base64.encodeToString(
+                password.toByteArray(),
+                android.util.Base64.DEFAULT
+            )
+            preferences[BIOMETRIC_EMAIL] = encodedEmail
+            preferences[BIOMETRIC_PASSWORD] = encodedPassword
+        }
+    }
+
+    /**
+     * Obtener credenciales guardadas para biometría
+     */
+    fun getBiometricCredentials(): Flow<Pair<String, String>?> {
+        return context.dataStore.data.map { preferences ->
+            val encodedEmail = preferences[BIOMETRIC_EMAIL]
+            val encodedPassword = preferences[BIOMETRIC_PASSWORD]
+
+            if (encodedEmail != null && encodedPassword != null) {
+                try {
+                    val email = String(
+                        android.util.Base64.decode(encodedEmail, android.util.Base64.DEFAULT)
+                    )
+                    val password = String(
+                        android.util.Base64.decode(encodedPassword, android.util.Base64.DEFAULT)
+                    )
+                    Pair(email, password)
+                } catch (e: Exception) {
+                    null
+                }
+            } else {
+                null
+            }
+        }
+    }
+
+    /**
+     * Limpiar credenciales biométricas
+     */
+    suspend fun clearBiometricCredentials() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(BIOMETRIC_EMAIL)
+            preferences.remove(BIOMETRIC_PASSWORD)
         }
     }
 

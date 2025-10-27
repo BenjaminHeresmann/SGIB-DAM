@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono simple de bomberos hasta que se pueda usar el logo oficial PNG -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Círculo de fondo azul -->
+    <path
+        android:fillColor="#003366"
+        android:pathData="M60,10 A50,50 0 1,1 60,110 A50,50 0 1,1 60,10 Z"/>
+
+    <!-- Borde amarillo -->
+    <path
+        android:strokeColor="#FFD700"
+        android:strokeWidth="3"
+        android:fillColor="#00000000"
+        android:pathData="M60,10 A50,50 0 1,1 60,110 A50,50 0 1,1 60,10 Z"/>
+
+    <!-- Casco simplificado -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M40,55 L80,55 L80,65 Q80,75 70,75 L50,75 Q40,75 40,65 Z"/>
+
+    <!-- Número 2 -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M52,38 h16 v6 h-10 v4 h10 v6 h-16 v-6 h10 v-4 h-10 Z"/>
+</vector>
+

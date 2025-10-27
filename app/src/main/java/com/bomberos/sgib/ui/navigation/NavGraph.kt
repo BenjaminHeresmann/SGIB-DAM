@@ -17,6 +17,7 @@ import com.bomberos.sgib.ui.screens.bomberos.BomberosScreen
 import com.bomberos.sgib.ui.screens.detalle.DetalleScreen
 import com.bomberos.sgib.ui.screens.form.FormScreen
 import com.bomberos.sgib.ui.screens.citaciones.CitacionesScreen
+import com.bomberos.sgib.ui.screens.citaciones.detalle.CitacionDetalleScreen
 
 /**
  * Grafo de navegación principal de la aplicación
@@ -142,6 +143,20 @@ fun NavGraph(
                 onNavigateToDetalle = { citacionId ->
                     navController.navigate(Screen.CitacionDetail.createRoute(citacionId))
                 }
+            )
+        }
+
+        // Pantalla de Detalle de Citación
+        composable(
+            route = Screen.CitacionDetail.route,
+            arguments = listOf(
+                navArgument("citacionId") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            CitacionDetalleScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

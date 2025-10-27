@@ -27,8 +27,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bomberos.sgib.R
 import com.bomberos.sgib.util.BiometricHelper
 import com.bomberos.sgib.util.Resource
@@ -44,13 +44,13 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val email by viewModel.email.collectAsState()
-    val password by viewModel.password.collectAsState()
-    val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
-    val emailError by viewModel.emailError.collectAsState()
-    val passwordError by viewModel.passwordError.collectAsState()
-    val loginState by viewModel.loginState.collectAsState()
-    val isBiometricEnabled by viewModel.isBiometricEnabled.collectAsState()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
+    val isPasswordVisible by viewModel.isPasswordVisible.collectAsStateWithLifecycle()
+    val emailError by viewModel.emailError.collectAsStateWithLifecycle()
+    val passwordError by viewModel.passwordError.collectAsStateWithLifecycle()
+    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    val isBiometricEnabled by viewModel.isBiometricEnabled.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
@@ -59,12 +59,20 @@ fun LoginScreen(
     val biometricHelper = remember { BiometricHelper(context) }
     val isBiometricAvailable = remember { biometricHelper.isBiometricAvailable() }
 
+    // Estado para el diálogo de habilitar biometría
+    var showEnableBiometricDialog by remember { mutableStateOf(false) }
+
     // Manejar resultado del login
     LaunchedEffect(loginState) {
         when (loginState) {
             is Resource.Success -> {
-                onLoginSuccess()
-                viewModel.clearLoginState()
+                // Si biometría está disponible pero no habilitada, preguntar
+                if (isBiometricAvailable && !isBiometricEnabled) {
+                    showEnableBiometricDialog = true
+                } else {
+                    onLoginSuccess()
+                    viewModel.clearLoginState()
+                }
             }
             else -> {}
         }
@@ -98,12 +106,11 @@ fun LoginScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Icono de bomberos
-                        Icon(
-                            imageVector = Icons.Default.LocalFireDepartment,
-                            contentDescription = null,
-                            modifier = Modifier.size(80.dp),
-                            tint = MaterialTheme.colorScheme.primary
+                        // Logo oficial Segunda Compañía de Bomberos Viña del Mar
+                        Image(
+                            painter = painterResource(R.drawable.logo_bomberos),
+                            contentDescription = "Logo Segunda Compañía Bomberos Viña del Mar",
+                            modifier = Modifier.size(120.dp)
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -327,49 +334,127 @@ fun LoginScreen(
                             }
                         }
 
-                        // Biometría (si está habilitada y disponible)
-                        if (isBiometricEnabled && isBiometricAvailable) {
+                        // Biometría (si está disponible)
+                        if (isBiometricAvailable) {
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Divider()
 
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            OutlinedButton(
-                                onClick = {
-                                    if (context is FragmentActivity) {
-                                        biometricHelper.showBiometricPrompt(
-                                            activity = context,
-                                            title = context.getString(R.string.biometric_title),
-                                            subtitle = context.getString(R.string.biometric_subtitle),
-                                            negativeButtonText = context.getString(R.string.biometric_negative),
-                                            onSuccess = {
-                                                // Login exitoso con biometría
-                                                viewModel.fillAdminCredentials()
-                                                viewModel.login()
-                                            },
-                                            onError = { errorMessage ->
-                                                // Manejar error
-                                            },
-                                            onFailed = {
-                                                // Autenticación fallida
-                                            }
+                            if (isBiometricEnabled) {
+                                // Botón de login con biometría
+                                OutlinedButton(
+                                    onClick = {
+                                        if (context is FragmentActivity) {
+                                            biometricHelper.showBiometricPrompt(
+                                                activity = context,
+                                                title = "Iniciar Sesión",
+                                                subtitle = "Usa tu huella digital para acceder",
+                                                negativeButtonText = "Cancelar",
+                                                onSuccess = {
+                                                    // Login exitoso con biometría
+                                                    viewModel.loginWithBiometric()
+                                                },
+                                                onError = { errorMessage ->
+                                                    // Manejar error de biometría
+                                                },
+                                                onFailed = {
+                                                    // Autenticación biométrica fallida
+                                                }
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Fingerprint,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Iniciar con Huella Digital")
+                                }
+                            } else {
+                                // Información sobre habilitar biometría
+                                Card(
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                                    )
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Info,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = "Inicia sesión con tu contraseña para habilitar el acceso biométrico",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer
                                         )
                                     }
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Fingerprint,
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(stringResource(R.string.biometric_login))
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+
+        // Diálogo para habilitar biometría
+        if (showEnableBiometricDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showEnableBiometricDialog = false
+                    onLoginSuccess()
+                    viewModel.clearLoginState()
+                },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Fingerprint,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp)
+                    )
+                },
+                title = {
+                    Text("¿Habilitar Acceso Biométrico?")
+                },
+                text = {
+                    Text(
+                        "Puedes usar tu huella digital para iniciar sesión de forma rápida y segura en el futuro.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.enableBiometricLogin()
+                            showEnableBiometricDialog = false
+                            onLoginSuccess()
+                            viewModel.clearLoginState()
+                        }
+                    ) {
+                        Text("Habilitar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showEnableBiometricDialog = false
+                            onLoginSuccess()
+                            viewModel.clearLoginState()
+                        }
+                    ) {
+                        Text("Ahora No")
+                    }
+                }
+            )
         }
     }
 }

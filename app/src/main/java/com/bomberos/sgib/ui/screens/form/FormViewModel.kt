@@ -24,12 +24,16 @@ class FormViewModel @Inject constructor(
     private val _state = MutableStateFlow(FormState())
     val state: StateFlow<FormState> = _state.asStateFlow()
 
-    private val bomberoId: Int? = savedStateHandle.get<String>("bomberoId")?.toIntOrNull()
+    private val bomberoId: Int? = try {
+        savedStateHandle.get<String>("bomberoId")?.toIntOrNull()?.takeIf { it > 0 }
+    } catch (_: Exception) {
+        null
+    }
 
     init {
-        // Si hay ID, estamos editando
-        if (bomberoId != null) {
-            loadBombero(bomberoId)
+        // Si hay ID válido (mayor a 0), estamos editando
+        bomberoId?.let { id ->
+            loadBombero(id)
         }
     }
 

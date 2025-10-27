@@ -124,13 +124,29 @@ class LoginViewModel @Inject constructor(
      * Login con biometría
      */
     fun loginWithBiometric() {
-        // Por ahora solo verificamos si está habilitado
-        // La lógica real de biometría se maneja en la UI
         viewModelScope.launch {
-            val isEnabled = isBiometricEnabled.value
-            if (isEnabled) {
-                // Recuperar credenciales guardadas y hacer login automático
-                // Por ahora, esto se implementará más adelante
+            // Recuperar credenciales guardadas y hacer login automático
+            authRepository.getSavedCredentials().collect { credentials ->
+                if (credentials != null) {
+                    _email.value = credentials.first
+                    _password.value = credentials.second
+                    // Ejecutar login automáticamente
+                    authRepository.login(credentials.first, credentials.second)
+                        .collect { resource ->
+                            _loginState.value = resource
+                        }
+                }
+            }
+        }
+    }
+
+    /**
+     * Habilitar login biométrico (guardar credenciales)
+     */
+    fun enableBiometricLogin() {
+        viewModelScope.launch {
+            if (_email.value.isNotBlank() && _password.value.isNotBlank()) {
+                authRepository.enableBiometric(_email.value, _password.value)
             }
         }
     }

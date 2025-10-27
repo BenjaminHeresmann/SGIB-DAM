@@ -1,6 +1,7 @@
 package com.bomberos.sgib.ui.screens.dashboard
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,9 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bomberos.sgib.R
 import com.bomberos.sgib.domain.model.Stats
 import com.bomberos.sgib.util.Resource
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -146,11 +149,11 @@ private fun DashboardContent(
                     modifier = Modifier.padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.LocalFireDepartment,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.primary
+                    // Logo oficial Segunda Compañía
+                    Image(
+                        painter = painterResource(R.drawable.logo_bomberos),
+                        contentDescription = "Logo Segunda Compañía Bomberos Viña del Mar",
+                        modifier = Modifier.size(56.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
