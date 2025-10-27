@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SGIB Bomberos</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Sistema de Bomberos</string>
+    <string name="login_subtitle">Segunda Compañía Viña del Mar</string>
+    <string name="email_label">Email o Usuario</string>
+    <string name="password_label">Contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="biometric_login">Usar Huella Digital</string>
+    <string name="login_error">Error al iniciar sesión</string>
+    <string name="email_error">Email inválido</string>
+    <string name="password_error">Contraseña requerida</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="total_bomberos">Total Bomberos</string>
+    <string name="bomberos_activos">Activos</string>
+    <string name="bomberos_licencia">En Licencia</string>
+    <string name="bomberos_inactivos">Inactivos</string>
+    <string name="welcome_message">Bienvenido, %s</string>
+
+    <!-- Bomberos List -->
+    <string name="bomberos_title">Bomberos</string>
+    <string name="search_hint">Buscar bomberos…</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_activos">Activos</string>
+    <string name="filter_licencia">Licencia</string>
+    <string name="filter_inactivos">Inactivos</string>
+    <string name="no_bomberos">No se encontraron bomberos</string>
+    <string name="add_bombero">Agregar Bombero</string>
+
+    <!-- Bombero Detail -->
+    <string name="bombero_detail_title">Detalle del Bombero</string>
+    <string name="phone_label">Teléfono</string>
+    <string name="email_bombero_label">Email</string>
+    <string name="address_label">Dirección</string>
+    <string name="rango_label">Rango</string>
+    <string name="especialidad_label">Especialidad</string>
+    <string name="estado_label">Estado</string>
+    <string name="fecha_ingreso_label">Fecha de Ingreso</string>
+    <string name="edit_bombero">Editar</string>
+    <string name="delete_bombero">Eliminar</string>
+
+    <!-- Bombero Form -->
+    <string name="new_bombero_title">Nuevo Bombero</string>
+    <string name="edit_bombero_title">Editar Bombero</string>
+    <string name="nombres_label">Nombres</string>
+    <string name="apellidos_label">Apellidos</string>
+    <string name="save_button">Guardar</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="nombres_error">Los nombres son requeridos</string>
+    <string name="apellidos_error">Los apellidos son requeridos</string>
+    <string name="select_photo">Seleccionar Foto</string>
+    <string name="take_photo">Tomar Foto</string>
+    <string name="remove_photo">Quitar Foto</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Inicio</string>
+    <string name="nav_bomberos">Bomberos</string>
+    <string name="nav_citaciones">Citaciones</string>
+    <string name="nav_profile">Perfil</string>
+
+    <!-- Common -->
+    <string name="loading">Cargando…</string>
+    <string name="error">Error</string>
+    <string name="retry">Reintentar</string>
+    <string name="success">Éxito</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="confirm">Confirmar</string>
+    <string name="delete_confirmation">¿Estás seguro de eliminar este registro?</string>
+
+    <!-- Estados -->
+    <string name="estado_activo">Activo</string>
+    <string name="estado_licencia">Licencia</string>
+    <string name="estado_inactivo">Inactivo</string>
+
+    <!-- Rangos -->
+    <string name="rango_bombero">Bombero</string>
+    <string name="rango_cabo">Cabo</string>
+    <string name="rango_sargento">Sargento</string>
+    <string name="rango_teniente">Teniente</string>
+    <string name="rango_capitan">Capitán</string>
+    <string name="rango_comandante">Comandante</string>
+
+    <!-- Biometric -->
+    <string name="biometric_title">Autenticación Biométrica</string>
+    <string name="biometric_subtitle">Usa tu huella digital para iniciar sesión</string>
+    <string name="biometric_negative">Cancelar</string>
+
+    <!-- Permissions -->
+    <string name="camera_permission_rationale">Se necesita permiso de cámara para tomar fotos</string>
+    <string name="permission_denied">Permiso denegado</string>
+</resources>
