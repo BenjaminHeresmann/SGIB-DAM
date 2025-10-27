@@ -1,54 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    AndroidManifest.xml: Archivo de configuracion principal de la aplicacion Android
+    Define permisos, componentes (Activities, Services, Providers) y metadatos de la app
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permisos necesarios -->
+    <!--
+        SECCION DE PERMISOS: Declaracion de permisos que la app necesita
+        Los permisos peligrosos (como CAMERA) deben solicitarse en tiempo de ejecucion
+    -->
+
+    <!-- Permiso para acceder a internet: necesario para futuras conexiones al backend -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permiso para verificar el estado de la red: detecta si hay conexion disponible -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permiso para usar la camara: permite tomar fotos de bomberos -->
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Permiso para usar autenticacion biometrica: huella dactilar o reconocimiento facial -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <!-- Permiso para usar huella dactilar (deprecated pero necesario para compatibilidad) -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <!-- Permiso para enviar notificaciones push: requerido desde Android 13 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Permiso para vibrar el dispositivo: usado en notificaciones -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- Features opcionales -->
+    <!--
+        SECCION DE FEATURES: Declara hardware que la app puede usar
+        required=false significa que la app funciona sin ese hardware
+    -->
+
+    <!-- Feature de camara: permite instalar la app en dispositivos sin camara -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
+    <!-- Feature de huella dactilar: permite instalar en dispositivos sin sensor biometrico -->
     <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="false" />
 
+    <!--
+        SECCION DE APLICACION: Configuracion global de la app
+    -->
     <application
+        <!-- Clase Application personalizada: inicializa Hilt y configuraciones globales -->
         android:name=".BomberosApp"
+
+        <!-- Permite respaldos automaticos de datos de la app -->
         android:allowBackup="true"
+
+        <!-- Reglas de extraccion de datos para Android 12+ -->
         android:dataExtractionRules="@xml/data_extraction_rules"
+
+        <!-- Reglas de respaldo completo de datos -->
         android:fullBackupContent="@xml/backup_rules"
+
+        <!-- Icono de la app: usa el logo de bomberos -->
         android:icon="@mipmap/ic_launcher"
+
+        <!-- Nombre visible de la app en el launcher -->
         android:label="@string/app_name"
+
+        <!-- Icono redondo para launchers que lo soporten -->
         android:roundIcon="@mipmap/ic_launcher_round"
+
+        <!-- Soporte para idiomas de derecha a izquierda (Right-To-Left) -->
         android:supportsRtl="true"
+
+        <!-- Tema visual de la app: define colores y estilos -->
         android:theme="@style/Theme.SGIBBomberos"
+
+        <!-- Permite trafico HTTP sin cifrar: necesario para desarrollo local -->
         android:usesCleartextTraffic="true"
+
+        <!-- API objetivo para herramientas de build -->
         tools:targetApi="31">
 
+        <!--
+            MainActivity: Activity principal de la app
+            Es el punto de entrada cuando el usuario abre la aplicacion
+        -->
         <activity
             android:name=".MainActivity"
+
+            <!-- exported=true permite que otros componentes inicien esta Activity -->
             android:exported="true"
+
+            <!-- Tema especifico de la Activity -->
             android:theme="@style/Theme.SGIBBomberos"
+
+            <!-- adjustResize redimensiona la pantalla cuando aparece el teclado -->
             android:windowSoftInputMode="adjustResize">
+
+            <!--
+                Intent filter: Define que esta Activity es el punto de entrada de la app
+                MAIN: Activity principal
+                LAUNCHER: Aparece en el menu de aplicaciones
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- FileProvider para compartir archivos de forma segura -->
+        <!--
+            FileProvider: Componente para compartir archivos de forma segura
+            Usado para compartir fotos tomadas con la camara
+            Evita el uso de file:// URIs que son inseguros
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
+
+            <!-- Authority unica basada en el applicationId -->
             android:authorities="${applicationId}.fileprovider"
+
+            <!-- No exportado: solo accesible desde esta app -->
             android:exported="false"
+
+            <!-- Permite conceder permisos URI temporales a otras apps -->
             android:grantUriPermissions="true">
+
+            <!-- Meta-data que define las rutas de archivos compartibles -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />

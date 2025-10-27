@@ -5,32 +5,54 @@ import com.bomberos.sgib.domain.model.Stats
 import com.bomberos.sgib.domain.model.RangoCount
 import com.bomberos.sgib.domain.model.User
 
-/**
- * Fuente de datos falsa/simulada para trabajar SIN backend
- * Datos precargados localmente
- */
+// Objeto FakeDataSource: Fuente de datos simulada para trabajar SIN backend
+// Este objeto actua como una base de datos en memoria para desarrollo y pruebas
+// Almacena datos precargados de usuarios, bomberos y citaciones
+// Es un objeto singleton: solo existe una instancia compartida en toda la aplicacion
+// En una app de produccion, estos datos vendrian de una base de datos real o API REST
+
+// PROPOSITO:
+// - Permite desarrollar y probar la aplicacion sin necesidad de un servidor backend
+// - Simula operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en memoria
+// - Los datos se pierden cuando se cierra la aplicacion (no hay persistencia)
+// - Facilita el desarrollo rapido y pruebas sin dependencias externas
+
+// CONEXIONES:
+// - BomberoRepositoryLocal: usa este FakeDataSource para operaciones de bomberos
+// - CitacionRepositoryLocal: usa este FakeDataSource para operaciones de citaciones
+// - AuthRepositoryLocal: usa los usuarios definidos aqui para autenticacion
+// - Todos los ViewModels: indirectamente acceden a estos datos a traves de repositorios
+
 object FakeDataSource {
 
-    // Usuario por defecto
+    // Usuario por defecto tipo ADMIN
+    // Credenciales de login: email="admin", password="admin"
+    // Tiene permisos completos para crear, editar y eliminar
     val defaultUser = User(
         id = 1,
         email = "admin",
         nombre = "Administrador del Sistema",
         rol = "Comandante",
-        tipo = "admin",
+        tipo = "admin",  // Tipo admin: acceso completo
         activo = true
     )
 
+    // Usuario tipo BOMBERO (rol limitado)
+    // Credenciales de login: email="bombero@bomberos.cl", password="bombero"
+    // Tiene permisos limitados, solo puede ver informacion
     val userBombero = User(
         id = 2,
         email = "bombero@bomberos.cl",
         nombre = "Usuario Bombero",
         rol = "Bombero",
-        tipo = "usuario",
+        tipo = "usuario",  // Tipo usuario: acceso limitado
         activo = true
     )
 
-    // Lista de bomberos precargados (mutable para permitir CRUD)
+    // Lista mutable de bomberos precargados
+    // MutableList permite agregar, editar y eliminar bomberos (operaciones CRUD)
+    // Private: solo accesible desde dentro de este objeto a traves de funciones publicas
+    // Esto encapsula los datos y controla como se accede a ellos
     private val bomberosList = mutableListOf(
         Bombero(
             id = 1,
