@@ -90,7 +90,13 @@ class FormViewModel @Inject constructor(
                 FormField.RANGO -> currentState.copy(rango = value)
                 FormField.ESPECIALIDAD -> currentState.copy(especialidad = value)
                 FormField.ESTADO -> currentState.copy(estado = value)
-                FormField.TELEFONO -> currentState.copy(telefono = value)
+                FormField.TELEFONO -> {
+                    // Solo permitir números, espacios, +, paréntesis y guiones
+                    val filteredValue = value.filter {
+                        it.isDigit() || it == ' ' || it == '+' || it == '-' || it == '(' || it == ')'
+                    }
+                    currentState.copy(telefono = filteredValue)
+                }
                 FormField.EMAIL -> currentState.copy(email = value)
                 FormField.DIRECCION -> currentState.copy(direccion = value)
             }
@@ -126,6 +132,17 @@ class FormViewModel @Inject constructor(
         // Validar email si no está vacío
         if (_state.value.email.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches()) {
             errors[FormField.EMAIL] = "Email inválido"
+        }
+
+        // Validar teléfono si no está vacío
+        if (_state.value.telefono.isNotBlank()) {
+            // Extraer solo los dígitos para validar longitud
+            val digitsOnly = _state.value.telefono.filter { it.isDigit() }
+            if (digitsOnly.length < 8) {
+                errors[FormField.TELEFONO] = "El teléfono debe tener al menos 8 dígitos"
+            } else if (digitsOnly.length > 15) {
+                errors[FormField.TELEFONO] = "El teléfono no puede tener más de 15 dígitos"
+            }
         }
 
         _state.update { it.copy(errors = errors) }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Tema principal de la app -->
     <style name="Theme.SGIBBomberos" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/primary</item>
+        <!-- Splash Screen -->
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 </resources>
 

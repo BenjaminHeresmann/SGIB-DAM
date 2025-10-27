@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema para Android 12+ (API 31+) con Splash Screen API -->
+    <style name="Theme.SGIBBomberos" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/primary</item>
+
+        <!-- Splash Screen API (Android 12+) usando logo_bomberos.webp -->
+        <item name="android:windowSplashScreenBackground">@color/secondary</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/logo_bomberos</item>
+        <item name="android:windowSplashScreenAnimationDuration">500</item>
+    </style>
+</resources>
+

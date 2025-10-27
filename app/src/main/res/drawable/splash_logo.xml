@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="150dp"
+    android:height="150dp"
+    android:viewportWidth="150"
+    android:viewportHeight="150">
+
+    <!-- Escudo/placa principal -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M75,25
+                         L90,32 L98,50 L98,85 L90,103 L75,110
+                         L60,103 L52,85 L52,50 L60,32 Z"/>
+
+    <!-- Borde del escudo -->
+    <path
+        android:fillColor="#B8860B"
+        android:strokeWidth="2"
+        android:strokeColor="#B8860B"
+        android:pathData="M75,25
+                         L90,32 L98,50 L98,85 L90,103 L75,110
+                         L60,103 L52,85 L52,50 L60,32 Z"
+        android:fillType="evenOdd"/>
+
+    <!-- Casco de bombero principal -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75,45
+                         C62,45 51,56 51,69
+                         L51,85
+                         C51,91 55,96 61,96
+                         L89,96
+                         C95,96 99,91 99,85
+                         L99,69
+                         C99,56 88,45 75,45 Z"/>
+
+    <!-- Parte roja del casco -->
+    <path
+        android:fillColor="#DC3545"
+        android:pathData="M75,50
+                         C65,50 56,59 56,69
+                         L56,82
+                         C56,87 59,91 64,91
+                         L86,91
+                         C91,91 94,87 94,82
+                         L94,69
+                         C94,59 85,50 75,50 Z"/>
+
+    <!-- Visera del casco -->
+    <path
+        android:fillColor="#8B0000"
+        android:pathData="M56,82
+                         L56,87
+                         C56,89 58,91 60,91
+                         L90,91
+                         C92,91 94,89 94,87
+                         L94,82
+                         Z"/>
+
+    <!-- Cruz grande en el centro -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,58 L80,58 L80,78 L70,78 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M65,65 L85,65 L85,71 L65,71 Z"/>
+
+    <!-- Detalles dorados del casco -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M56,69 L94,69 L94,72 L56,72 Z"/>
+
+    <!-- Llamas decorativas abajo -->
+    <path
+        android:fillColor="#FFA500"
+        android:pathData="M65,100
+                         C65,100 62,103 62,107
+                         C62,111 65,113 69,113
+                         C73,113 76,111 76,107
+                         C76,103 73,100 73,100
+                         L65,100 Z"/>
+
+    <path
+        android:fillColor="#FF6347"
+        android:pathData="M75,100
+                         C75,100 72,103 72,107
+                         C72,111 75,113 79,113
+                         C83,113 86,111 86,107
+                         C86,103 83,100 83,100
+                         L75,100 Z"/>
+
+    <path
+        android:fillColor="#FF4500"
+        android:pathData="M85,100
+                         C85,100 82,103 82,107
+                         C82,111 85,113 89,113
+                         C93,113 96,111 96,107
+                         C96,103 93,100 93,100
+                         L85,100 Z"/>
+</vector>
+

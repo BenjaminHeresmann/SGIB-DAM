@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -22,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -142,7 +144,8 @@ fun FormScreen(
                 onValueChange = { viewModel.updateField(FormField.EMAIL, it) },
                 label = "Email",
                 error = state.errors[FormField.EMAIL],
-                leadingIcon = Icons.Default.Email
+                leadingIcon = Icons.Default.Email,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
             FormTextField(
@@ -150,7 +153,8 @@ fun FormScreen(
                 onValueChange = { viewModel.updateField(FormField.TELEFONO, it) },
                 label = "Teléfono",
                 error = state.errors[FormField.TELEFONO],
-                leadingIcon = Icons.Default.Phone
+                leadingIcon = Icons.Default.Phone,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
             )
 
             FormTextField(
@@ -411,7 +415,8 @@ fun FormTextField(
     label: String,
     error: String? = null,
     leadingIcon: androidx.compose.ui.graphics.vector.ImageVector? = null,
-    maxLines: Int = 1
+    maxLines: Int = 1,
+    keyboardOptions: androidx.compose.foundation.text.KeyboardOptions = androidx.compose.foundation.text.KeyboardOptions.Default
 ) {
     OutlinedTextField(
         value = value,
@@ -424,7 +429,8 @@ fun FormTextField(
         isError = error != null,
         supportingText = error?.let { { Text(it) } },
         maxLines = maxLines,
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        keyboardOptions = keyboardOptions
     )
 }
 

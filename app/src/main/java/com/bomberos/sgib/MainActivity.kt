@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.bomberos.sgib.ui.navigation.NavGraph
 import com.bomberos.sgib.ui.theme.BomberosTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Instalar splash screen antes de super.onCreate
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
         // Habilitar edge-to-edge para mejor experiencia visual
