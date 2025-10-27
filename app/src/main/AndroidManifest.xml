@@ -49,55 +49,42 @@
 
     <!--
         SECCION DE APLICACION: Configuracion global de la app
+        - Clase Application personalizada: inicializa Hilt y configuraciones globales
+        - Permite respaldos automaticos de datos de la app
+        - Reglas de extraccion de datos para Android 12+
+        - Reglas de respaldo completo de datos
+        - Icono de la app: usa el logo de bomberos
+        - Nombre visible de la app en el launcher
+        - Icono redondo para launchers que lo soporten
+        - Soporte para idiomas de derecha a izquierda (Right-To-Left)
+        - Tema visual de la app: define colores y estilos
+        - Permite trafico HTTP sin cifrar: necesario para desarrollo local
+        - API objetivo para herramientas de build
     -->
     <application
-        <!-- Clase Application personalizada: inicializa Hilt y configuraciones globales -->
         android:name=".BomberosApp"
-
-        <!-- Permite respaldos automaticos de datos de la app -->
         android:allowBackup="true"
-
-        <!-- Reglas de extraccion de datos para Android 12+ -->
         android:dataExtractionRules="@xml/data_extraction_rules"
-
-        <!-- Reglas de respaldo completo de datos -->
         android:fullBackupContent="@xml/backup_rules"
-
-        <!-- Icono de la app: usa el logo de bomberos -->
         android:icon="@mipmap/ic_launcher"
-
-        <!-- Nombre visible de la app en el launcher -->
         android:label="@string/app_name"
-
-        <!-- Icono redondo para launchers que lo soporten -->
         android:roundIcon="@mipmap/ic_launcher_round"
-
-        <!-- Soporte para idiomas de derecha a izquierda (Right-To-Left) -->
         android:supportsRtl="true"
-
-        <!-- Tema visual de la app: define colores y estilos -->
         android:theme="@style/Theme.SGIBBomberos"
-
-        <!-- Permite trafico HTTP sin cifrar: necesario para desarrollo local -->
         android:usesCleartextTraffic="true"
-
-        <!-- API objetivo para herramientas de build -->
         tools:targetApi="31">
 
         <!--
             MainActivity: Activity principal de la app
             Es el punto de entrada cuando el usuario abre la aplicacion
+            - exported=true permite que otros componentes inicien esta Activity
+            - Tema especifico de la Activity
+            - adjustResize redimensiona la pantalla cuando aparece el teclado
         -->
         <activity
             android:name=".MainActivity"
-
-            <!-- exported=true permite que otros componentes inicien esta Activity -->
             android:exported="true"
-
-            <!-- Tema especifico de la Activity -->
             android:theme="@style/Theme.SGIBBomberos"
-
-            <!-- adjustResize redimensiona la pantalla cuando aparece el teclado -->
             android:windowSoftInputMode="adjustResize">
 
             <!--
@@ -115,17 +102,14 @@
             FileProvider: Componente para compartir archivos de forma segura
             Usado para compartir fotos tomadas con la camara
             Evita el uso de file:// URIs que son inseguros
+            - Authority unica basada en el applicationId
+            - No exportado: solo accesible desde esta app
+            - Permite conceder permisos URI temporales a otras apps
         -->
         <provider
             android:name="androidx.core.content.FileProvider"
-
-            <!-- Authority unica basada en el applicationId -->
             android:authorities="${applicationId}.fileprovider"
-
-            <!-- No exportado: solo accesible desde esta app -->
             android:exported="false"
-
-            <!-- Permite conceder permisos URI temporales a otras apps -->
             android:grantUriPermissions="true">
 
             <!-- Meta-data que define las rutas de archivos compartibles -->
