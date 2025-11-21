@@ -31,19 +31,19 @@ interface ApiService {
     ): Response<BomberosResponse>
 
     @GET("bomberos/{id}")
-    suspend fun getBomberoById(@Path("id") id: Int): Response<BomberoResponse>
+    suspend fun getBomberoById(@Path("id") id: String): Response<BomberoResponse>
 
     @POST("bomberos")
     suspend fun createBombero(@Body request: BomberoRequest): Response<BomberoResponse>
 
     @PUT("bomberos/{id}")
     suspend fun updateBombero(
-        @Path("id") id: Int,
+        @Path("id") id: String,
         @Body request: BomberoRequest
     ): Response<BomberoResponse>
 
     @DELETE("bomberos/{id}")
-    suspend fun deleteBombero(@Path("id") id: Int): Response<BomberoResponse>
+    suspend fun deleteBombero(@Path("id") id: String): Response<BomberoResponse>
 
     @GET("bomberos/stats/general")
     suspend fun getStats(): Response<StatsResponse>

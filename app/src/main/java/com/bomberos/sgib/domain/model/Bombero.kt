@@ -7,9 +7,8 @@ package com.bomberos.sgib.domain.model
 
 data class Bombero(
     // ID unico del bombero en la base de datos
-    // Se genera automaticamente al crear un bombero nuevo
-    // Tipo Int: identificador numerico unico
-    val id: Int,
+    // Tipo String: ObjectId de MongoDB (24 caracteres hexadecimales)
+    val id: String,
 
     // Nombres del bombero (puede incluir primer y segundo nombre)
     // Campo obligatorio, no puede estar vacio

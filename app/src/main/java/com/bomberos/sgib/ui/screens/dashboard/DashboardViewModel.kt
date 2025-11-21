@@ -2,8 +2,8 @@ package com.bomberos.sgib.ui.screens.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bomberos.sgib.data.repository.AuthRepositoryLocal
-import com.bomberos.sgib.data.repository.BomberoRepositoryLocal
+import com.bomberos.sgib.data.repository.AuthRepository
+import com.bomberos.sgib.data.repository.BomberoRepository
 import com.bomberos.sgib.domain.model.Stats
 import com.bomberos.sgib.domain.model.User
 import com.bomberos.sgib.util.Resource
@@ -18,8 +18,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val bomberoRepository: BomberoRepositoryLocal,
-    private val authRepository: AuthRepositoryLocal
+    private val bomberoRepository: BomberoRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     // Usuario actual

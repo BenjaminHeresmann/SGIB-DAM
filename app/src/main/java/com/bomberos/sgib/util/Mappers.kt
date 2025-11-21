@@ -41,18 +41,14 @@ fun BomberoDto.toBombero(): Bombero {
 // Stats
 fun StatsDto.toStats(): Stats {
     return Stats(
+        totalBomberos = totalBomberos,
         totalActivos = totalActivos,
         totalInactivos = totalInactivos,
-        total = total,
-        porRango = porRango.map { it.toRangoCount() },
-        nuevosUltimoMes = nuevosUltimoMes
-    )
-}
-
-fun RangoCountDto.toRangoCount(): RangoCount {
-    return RangoCount(
-        rango = rango,
-        cantidad = cantidad
+        totalSuspendidos = totalSuspendidos,
+        totalBajas = totalBajas,
+        totalRenuncias = totalRenuncias,
+        totalNoActivos = totalNoActivos,
+        porcentajeActivos = porcentajeActivos
     )
 }
 

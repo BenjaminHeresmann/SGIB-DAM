@@ -21,17 +21,17 @@ interface CitacionRepository {
         tipoActividad: String? = null
     ): Flow<Resource<List<Citacion>>>
 
-    fun getCitacionById(id: Int): Flow<Resource<Citacion>>
+    fun getCitacionById(id: String): Flow<Resource<Citacion>>
 
     fun createCitacion(request: CitacionCreateRequest): Flow<Resource<Citacion>>
 
-    fun updateCitacion(id: Int, request: CitacionUpdateRequest): Flow<Resource<Citacion>>
+    fun updateCitacion(id: String, request: CitacionUpdateRequest): Flow<Resource<Citacion>>
 
-    fun deleteCitacion(id: Int): Flow<Resource<Boolean>>
+    fun deleteCitacion(id: String): Flow<Resource<Boolean>>
 
-    fun confirmarAsistencia(id: Int): Flow<Resource<Citacion>>
+    fun confirmarAsistencia(id: String): Flow<Resource<Citacion>>
 
-    fun rechazarAsistencia(id: Int): Flow<Resource<Citacion>>
+    fun rechazarAsistencia(id: String): Flow<Resource<Citacion>>
 }
 
 class CitacionRepositoryImpl @Inject constructor(
@@ -69,7 +69,7 @@ class CitacionRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCitacionById(id: Int): Flow<Resource<Citacion>> = flow {
+    override fun getCitacionById(id: String): Flow<Resource<Citacion>> = flow {
         try {
             emit(Resource.Loading())
             val response = apiService.getCitacionById(id)
@@ -118,7 +118,7 @@ class CitacionRepositoryImpl @Inject constructor(
     }
 
     override fun updateCitacion(
-        id: Int,
+        id: String,
         request: CitacionUpdateRequest
     ): Flow<Resource<Citacion>> = flow {
         try {
@@ -144,7 +144,7 @@ class CitacionRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun deleteCitacion(id: Int): Flow<Resource<Boolean>> = flow {
+    override fun deleteCitacion(id: String): Flow<Resource<Boolean>> = flow {
         try {
             emit(Resource.Loading())
             val response = apiService.deleteCitacion(id)
@@ -168,7 +168,7 @@ class CitacionRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun confirmarAsistencia(id: Int): Flow<Resource<Citacion>> = flow {
+    override fun confirmarAsistencia(id: String): Flow<Resource<Citacion>> = flow {
         try {
             emit(Resource.Loading())
             val response = apiService.confirmarAsistencia(id)
@@ -192,7 +192,7 @@ class CitacionRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun rechazarAsistencia(id: Int): Flow<Resource<Citacion>> = flow {
+    override fun rechazarAsistencia(id: String): Flow<Resource<Citacion>> = flow {
         try {
             emit(Resource.Loading())
             val response = apiService.rechazarAsistencia(id)

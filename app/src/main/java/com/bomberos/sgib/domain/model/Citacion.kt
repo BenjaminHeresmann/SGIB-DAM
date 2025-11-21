@@ -9,8 +9,8 @@ import java.time.LocalDateTime
 
 data class Citacion(
     // ID unico de la citacion en la base de datos
-    // Se genera automaticamente al crear una citacion nueva
-    val id: Int,
+    // Tipo String: ObjectId de MongoDB (24 caracteres hexadecimales)
+    val id: String,
 
     // Titulo descriptivo de la citacion
     // Ejemplo: "Entrenamiento de Rescate Vehicular", "Guardia Nocturna Enero"

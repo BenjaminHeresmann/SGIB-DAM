@@ -11,8 +11,8 @@ package com.bomberos.sgib.domain.model
 // - componentN(): para desestructuracion de objetos
 data class User(
     // ID unico del usuario en la base de datos
-    // Tipo Int: numero entero usado como identificador primario
-    val id: Int,
+    // Tipo String: ObjectId de MongoDB (24 caracteres hexadecimales)
+    val id: String,
 
     // Email del usuario: usado para login y comunicaciones
     // Es unico en el sistema (un email por usuario)

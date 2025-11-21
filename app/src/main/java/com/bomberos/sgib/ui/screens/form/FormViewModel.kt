@@ -3,7 +3,7 @@ package com.bomberos.sgib.ui.screens.form
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bomberos.sgib.data.repository.BomberoRepositoryLocal
+import com.bomberos.sgib.data.repository.BomberoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,21 +17,21 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class FormViewModel @Inject constructor(
-    private val repository: BomberoRepositoryLocal,
+    private val repository: BomberoRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(FormState())
     val state: StateFlow<FormState> = _state.asStateFlow()
 
-    private val bomberoId: Int? = try {
-        savedStateHandle.get<Int>("bomberoId")?.takeIf { it > 0 }
+    private val bomberoId: String? = try {
+        savedStateHandle.get<String>("bomberoId")?.takeIf { it.isNotBlank() }
     } catch (_: Exception) {
         null
     }
 
     init {
-        // Si hay ID válido (mayor a 0), estamos editando
+        // Si hay ID válido (not blank), estamos editando
         bomberoId?.let { id ->
             loadBombero(id)
         }
@@ -40,7 +40,7 @@ class FormViewModel @Inject constructor(
     /**
      * Cargar datos del bombero para editar
      */
-    private fun loadBombero(id: Int) {
+    private fun loadBombero(id: String) {
         viewModelScope.launch {
             repository.getBomberoById(id).collect { result ->
                 when (result) {
@@ -161,9 +161,8 @@ class FormViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, error = null) }
 
             try {
-                // Crear objeto Bombero con los datos del formulario
-                val bombero = com.bomberos.sgib.domain.model.Bombero(
-                    id = bomberoId ?: 0,
+                // Crear BomberoRequest con los datos del formulario
+                val request = com.bomberos.sgib.data.remote.dto.BomberoRequest(
                     nombres = _state.value.nombres.trim(),
                     apellidos = _state.value.apellidos.trim(),
                     rango = _state.value.rango,
@@ -173,16 +172,14 @@ class FormViewModel @Inject constructor(
                     email = _state.value.email.trim().ifBlank { null },
                     direccion = _state.value.direccion.trim().ifBlank { null },
                     fechaIngreso = java.time.LocalDate.now().toString(),
-                    fotoUrl = _state.value.fotoUri,
-                    createdAt = "",
-                    updatedAt = ""
+                    fotoUrl = _state.value.fotoUri
                 )
 
                 // Decidir si crear o actualizar
-                val flow = if (bomberoId != null && bomberoId!! > 0) {
-                    repository.updateBombero(bombero)
+                val flow = if (bomberoId != null && bomberoId!!.isNotBlank()) {
+                    repository.updateBombero(bomberoId!!, request)
                 } else {
-                    repository.createBombero(bombero)
+                    repository.createBombero(request)
                 }
 
                 // Procesar resultado

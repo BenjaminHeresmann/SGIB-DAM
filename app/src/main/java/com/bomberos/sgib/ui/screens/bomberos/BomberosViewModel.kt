@@ -2,7 +2,7 @@ package com.bomberos.sgib.ui.screens.bomberos
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bomberos.sgib.data.repository.BomberoRepositoryLocal
+import com.bomberos.sgib.data.repository.BomberoRepository
 import com.bomberos.sgib.domain.model.Bombero
 import com.bomberos.sgib.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class BomberosViewModel @Inject constructor(
-    private val repository: BomberoRepositoryLocal
+    private val repository: BomberoRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BomberosState())

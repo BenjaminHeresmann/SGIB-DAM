@@ -25,7 +25,8 @@ data class LoginData(
 )
 
 data class UserDto(
-    val id: Int,
+    @SerializedName("_id")
+    val id: String,
     val email: String,
     val nombre: String,
     val rol: String,

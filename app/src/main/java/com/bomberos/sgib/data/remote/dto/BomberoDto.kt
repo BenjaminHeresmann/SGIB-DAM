@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName
  * DTO para Bombero desde API
  */
 data class BomberoDto(
-    val id: Int,
+    @SerializedName("_id")
+    val id: String,
     val nombres: String,
     val apellidos: String,
     val rango: String,
@@ -30,7 +31,12 @@ data class BomberoDto(
  */
 data class BomberosResponse(
     val success: Boolean,
-    val data: List<BomberoDto>,
+    val message: String,
+    val data: BomberosData?
+)
+
+data class BomberosData(
+    val bomberos: List<BomberoDto>,
     val pagination: PaginationDto
 )
 
@@ -39,8 +45,8 @@ data class BomberosResponse(
  */
 data class BomberoResponse(
     val success: Boolean,
-    val data: BomberoDto,
-    val message: String?
+    val message: String,
+    val data: BomberoDto?
 )
 
 /**
@@ -69,4 +75,25 @@ data class BomberoRequest(
     val fechaIngreso: String? = null,
     val fotoUrl: String? = null
 )
+
+/**
+ * Response de estadísticas
+ */
+data class StatsResponse(
+    val success: Boolean,
+    val message: String,
+    val data: StatsDto?
+)
+
+data class StatsDto(
+    val totalBomberos: Int,
+    val totalActivos: Int,
+    val totalInactivos: Int,
+    val totalSuspendidos: Int,
+    val totalBajas: Int,
+    val totalRenuncias: Int,
+    val totalNoActivos: Int,
+    val porcentajeActivos: Double
+)
+
 

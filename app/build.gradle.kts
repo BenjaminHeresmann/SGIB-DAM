@@ -43,11 +43,8 @@ android {
             useSupportLibrary = true
         }
 
-        // URL del backend - COMENTADO: Actualmente trabajamos sin backend
-        // Usamos datos locales almacenados en memoria (FakeDataSource)
-        // buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:3002/api/\"")
-        // Valor por defecto para que compile (no se usa en modo local)
-        buildConfigField("String", "BASE_URL", "\"http://localhost:3002/api/\"")
+        // URL del backend en producción (Railway)
+        buildConfigField("String", "BASE_URL", "\"https://sistema-bomberos-server-production.up.railway.app/api/\"")
     }
 
     // Tipos de construccion: diferentes configuraciones para desarrollo y produccion
@@ -67,15 +64,15 @@ android {
     // Opciones de compilacion de Java
     compileOptions {
         // Version de Java para compatibilidad de codigo fuente
-        sourceCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
         // Version de Java para bytecode generado
-        targetCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     // Opciones especificas de Kotlin
     kotlinOptions {
         // Version de JVM objetivo para el codigo Kotlin
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
 
     // Caracteristicas de construccion habilitadas

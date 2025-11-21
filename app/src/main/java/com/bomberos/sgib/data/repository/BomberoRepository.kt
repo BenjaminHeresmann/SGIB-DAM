@@ -39,7 +39,7 @@ class BomberoRepository @Inject constructor(
             )
 
             if (response.isSuccessful && response.body()?.success == true) {
-                val bomberos = response.body()?.data?.map { it.toBombero() } ?: emptyList()
+                val bomberos = response.body()?.data?.bomberos?.map { it.toBombero() } ?: emptyList()
                 emit(Resource.Success(bomberos))
             } else {
                 emit(Resource.Error("Error al cargar bomberos"))
@@ -56,7 +56,7 @@ class BomberoRepository @Inject constructor(
     /**
      * Obtener bombero por ID
      */
-    fun getBomberoById(id: Int): Flow<Resource<Bombero>> = flow {
+    fun getBomberoById(id: String): Flow<Resource<Bombero>> = flow {
         try {
             emit(Resource.Loading())
 
@@ -113,7 +113,7 @@ class BomberoRepository @Inject constructor(
     /**
      * Actualizar bombero
      */
-    fun updateBombero(id: Int, request: BomberoRequest): Flow<Resource<Bombero>> = flow {
+    fun updateBombero(id: String, request: BomberoRequest): Flow<Resource<Bombero>> = flow {
         try {
             emit(Resource.Loading())
 
@@ -141,7 +141,7 @@ class BomberoRepository @Inject constructor(
     /**
      * Eliminar bombero (soft delete)
      */
-    fun deleteBombero(id: Int): Flow<Resource<Boolean>> = flow {
+    fun deleteBombero(id: String): Flow<Resource<Boolean>> = flow {
         try {
             emit(Resource.Loading())
 

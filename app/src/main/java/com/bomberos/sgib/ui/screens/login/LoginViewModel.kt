@@ -2,7 +2,7 @@ package com.bomberos.sgib.ui.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bomberos.sgib.data.repository.AuthRepositoryLocal
+import com.bomberos.sgib.data.repository.AuthRepository
 import com.bomberos.sgib.domain.model.User
 import com.bomberos.sgib.util.Resource
 import com.bomberos.sgib.util.Validators
@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepositoryLocal
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     // Estado del formulario
@@ -122,33 +122,21 @@ class LoginViewModel @Inject constructor(
 
     /**
      * Login con biometría
+     * TODO: Implementar con backend
      */
     fun loginWithBiometric() {
         viewModelScope.launch {
-            // Recuperar credenciales guardadas y hacer login automático
-            authRepository.getSavedCredentials().collect { credentials ->
-                if (credentials != null) {
-                    _email.value = credentials.first
-                    _password.value = credentials.second
-                    // Ejecutar login automáticamente
-                    authRepository.login(credentials.first, credentials.second)
-                        .collect { resource ->
-                            _loginState.value = resource
-                        }
-                }
-            }
+            // Por ahora no implementado - requiere backend support
+            _loginState.value = Resource.Error("Biometría no disponible aún")
         }
     }
 
     /**
      * Habilitar login biométrico (guardar credenciales)
+     * TODO: Implementar con backend
      */
     fun enableBiometricLogin() {
-        viewModelScope.launch {
-            if (_email.value.isNotBlank() && _password.value.isNotBlank()) {
-                authRepository.enableBiometric(_email.value, _password.value)
-            }
-        }
+        // Por ahora no implementado - requiere backend support
     }
 
     /**

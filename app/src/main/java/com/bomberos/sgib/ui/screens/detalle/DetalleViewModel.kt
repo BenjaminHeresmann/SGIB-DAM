@@ -3,7 +3,7 @@ package com.bomberos.sgib.ui.screens.detalle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bomberos.sgib.data.repository.BomberoRepositoryLocal
+import com.bomberos.sgib.data.repository.BomberoRepository
 import com.bomberos.sgib.domain.model.Bombero
 import com.bomberos.sgib.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +20,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DetalleViewModel @Inject constructor(
-    private val repository: BomberoRepositoryLocal,
+    private val repository: BomberoRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -29,8 +29,8 @@ class DetalleViewModel @Inject constructor(
 
     init {
         // Obtener ID del bombero desde los argumentos de navegación
-        val bomberoId = savedStateHandle.get<Int>("bomberoId")
-        if (bomberoId != null && bomberoId > 0) {
+        val bomberoId = savedStateHandle.get<String>("bomberoId")
+        if (bomberoId != null && bomberoId.isNotBlank()) {
             loadBombero(bomberoId)
         } else {
             _state.update { it.copy(error = "ID de bombero inválido") }
@@ -40,7 +40,7 @@ class DetalleViewModel @Inject constructor(
     /**
      * Cargar datos del bombero
      */
-    private fun loadBombero(id: Int) {
+    private fun loadBombero(id: String) {
         repository.getBomberoById(id).onEach { result ->
             when (result) {
                 is Resource.Loading -> {
